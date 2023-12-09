@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int        @id @default(autoincrement())
+  email          String     @unique
+  name           String
+  password       String
+  isFlaggedBully Boolean    @default(false)
+  chatUsers      ChatUser[]
+  messages       Message[]
+}
+
+model ChatInstance {
+  id        Int        @id @default(autoincrement())
+  chatUsers ChatUser[]
+  messages  Message[]
+}
+
+model ChatUser {
+  userId         Int
+  user           User         @relation(fields: [userId], references: [id])
+  chatInstanceId Int
+  ChatInstance   ChatInstance @relation(fields: [chatInstanceId], references: [id])
+
+  @@id([userId, chatInstanceId])
+}
+
+model Message {
+  id             Int          @id @default(autoincrement())
+  content        String
+  createdAt      DateTime     @default(now())
+  userId         Int
+  user           User         @relation(fields: [userId], references: [id])
+  chatInstanceId Int
+  chatInstance   ChatInstance @relation(fields: [chatInstanceId], references: [id])
+  isScanned      Boolean      @default(false)
+  isBully        Boolean      @default(false)
+}
