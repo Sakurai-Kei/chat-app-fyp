@@ -1,7 +1,7 @@
 'use client';
 
 import cx from 'clsx';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import {
   Container,
   Avatar,
@@ -19,12 +19,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconLogout, IconHeart, IconChevronDown } from '@tabler/icons-react';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './HeaderTabs.module.css';
-
-const user = {
-  name: 'Jane Spoonfighter',
-  email: 'janspoon@fighter.dev',
-  image: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png',
-};
+import LoginModal from '@/components/LoginModal/LoginModal';
 
 const tabs = ['Home', 'About'];
 
@@ -36,13 +31,24 @@ export function HeaderTabs({
   onLoginChange: (loginStatus: boolean) => void;
 }) {
   const theme = useMantineTheme();
+  const [user, setUser] = useState(null);
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
   const [tabValue, setTabValue] = useState('Home');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
     onLoginChange(isLoggedIn);
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setIsLoggedIn(true);
+    }
   }, [isLoggedIn]);
 
   const items = tabs.map((tab) => (
@@ -50,6 +56,15 @@ export function HeaderTabs({
       {tab}
     </Tabs.Tab>
   ));
+
+  const showLoginModal = () => {
+    setIsLoginModalOpen(!isLoginModalOpen);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem('user');
+  };
 
   return (
     <div className={classes.header}>
@@ -74,9 +89,9 @@ export function HeaderTabs({
                   className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
                 >
                   <Group gap={7}>
-                    <Avatar src={user.image} alt={user.name} radius="xl" size={20} />
+                    <Avatar src={user?.image} alt={user?.name} radius="xl" size={20} />
                     <Text fw={500} size="sm" lh={1} mr={3}>
-                      {user.name}
+                      {user?.name}
                     </Text>
                     <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
                   </Group>
@@ -102,13 +117,16 @@ export function HeaderTabs({
                     <IconLogout style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                   }
                 >
-                  <UnstyledButton onClick={() => setIsLoggedIn(false)}>Logout</UnstyledButton>
+                  <UnstyledButton onClick={() => handleLogout()}>Logout</UnstyledButton>
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>
           ) : (
             // User is not logged in, show login button
-            <Button onClick={() => setIsLoggedIn(true)}>Login</Button>
+            <>
+              <Button onClick={() => showLoginModal()}>Login</Button>
+              <LoginModal open={isLoginModalOpen} onClose={() => showLoginModal()} setIsLoggedIn={setIsLoggedIn} />
+            </>
           )}
         </Group>
       </Container>

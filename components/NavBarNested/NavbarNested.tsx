@@ -13,17 +13,30 @@ import { ChatInstance } from '@/app/channels/page';
 const mockdata = [{ label: 'Chat Instance with User 2', icon: IconGauge }];
 
 export function NavbarNested({ onChatSelect }) {
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user') || '{}'));
   const [chatInstances, setChatInstances] = useState<[] | ChatInstance[]>([]);
 
   useEffect(() => {
     const fetchChatInstances = async () => {
       const response = await fetch('/api/channels');
       const data = await response.json();
-      const modifiedData = data.map((item) => ({
-        label: `Chat Instance with User ${item.chatUsers[1].user.id}`,
-        icon: IconGauge,
-        id: item.id,
-      }));
+
+      // Get current user ID from localStorage
+      const currentUserId = user.id;
+
+      const modifiedData = data
+        .filter((item) => item.chatUsers.some((user) => user.user.id === currentUserId))
+        .map((item) => {
+          // Find the other user in the chat
+          const otherUser = item.chatUsers.find((user) => user.user.id !== currentUserId);
+
+          return {
+            label: otherUser ? `Chat Instance with User ${otherUser.user.id}` : 'Chat Instance',
+            icon: IconGauge,
+            id: item.id,
+          };
+        });
+
       setChatInstances(modifiedData);
     };
 

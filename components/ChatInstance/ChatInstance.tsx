@@ -10,6 +10,7 @@ import type { ChatInstance } from '@/app/channels/page';
 export function ChatInstance(props: { currentChat: ChatInstance }) {
   const { currentChat } = props;
   const [message, setMessage] = useState('');
+  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('user')!));
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
@@ -24,7 +25,7 @@ export function ChatInstance(props: { currentChat: ChatInstance }) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ currentChat, message, currentUser  }),
     });
 
     // Handle the response
