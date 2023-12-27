@@ -39,7 +39,7 @@ export async function POST(request: Request) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(message),
+        body: JSON.stringify({ message }),
       });
 
       // Handle the response

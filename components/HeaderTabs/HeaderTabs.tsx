@@ -1,6 +1,7 @@
 'use client';
 
 import cx from 'clsx';
+import Link from 'next/link';
 import { useState, useEffect, use } from 'react';
 import {
   Container,
@@ -110,6 +111,18 @@ export function HeaderTabs({
                   Profile
                 </Menu.Item>
 
+                <Menu.Label>App Management</Menu.Label>
+
+                <Menu.Item
+                  leftSection={
+                    <IconLogout style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                  }
+                >
+                  <Link href="/admin">
+                  <UnstyledButton>Admins</UnstyledButton>
+                  </Link>
+                </Menu.Item>
+
                 <Menu.Label>Settings</Menu.Label>
 
                 <Menu.Item
@@ -125,7 +138,11 @@ export function HeaderTabs({
             // User is not logged in, show login button
             <>
               <Button onClick={() => showLoginModal()}>Login</Button>
-              <LoginModal open={isLoginModalOpen} onClose={() => showLoginModal()} setIsLoggedIn={setIsLoggedIn} />
+              <LoginModal
+                open={isLoginModalOpen}
+                onClose={() => showLoginModal()}
+                setIsLoggedIn={setIsLoggedIn}
+              />
             </>
           )}
         </Group>
