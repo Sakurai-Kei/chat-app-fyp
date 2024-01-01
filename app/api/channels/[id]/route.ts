@@ -24,11 +24,11 @@ export async function POST(request: Request) {
 
   // Save the message to the database
   const savedMessage = await prisma.message.create({
-    data: { 
+    data: {
       content: message,
       userId: currentUser.id,
       chatInstanceId: currentChat.id,
-     },
+    },
   });
 
   // Send the message to localhost:5000 in the background

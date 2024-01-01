@@ -12,7 +12,7 @@ export default function LoginModal({ open, onClose, setIsLoggedIn }: LoginModalP
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
-    const response = await fetch(`/api/users/auth/login`, {
+    const response = await fetch('/api/users/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -23,10 +23,14 @@ export default function LoginModal({ open, onClose, setIsLoggedIn }: LoginModalP
     if (response.ok) {
       // Handle successful login
       const user = await response.json();
-      localStorage.setItem('user', JSON.stringify({
-        ...user,
-        image: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png'
-      }));
+      localStorage.setItem(
+        'user',
+        JSON.stringify({
+          ...user,
+          image:
+            'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png',
+        })
+      );
       setIsLoggedIn(true);
       onClose();
     } else {

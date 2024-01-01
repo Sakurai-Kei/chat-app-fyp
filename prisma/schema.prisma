@@ -18,7 +18,7 @@ model User {
   isFlaggedBully Boolean    @default(false)
   chatUsers      ChatUser[]
   messages       Message[]
-  risk_level     String     @default("low")
+  risk_level     String     @default("none")
 }
 
 model ChatInstance {
