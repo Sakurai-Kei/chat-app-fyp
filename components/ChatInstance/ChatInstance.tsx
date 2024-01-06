@@ -25,15 +25,11 @@ export function ChatInstance(props: { currentChat: ChatInstance }) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ currentChat, message, currentUser  }),
+      body: JSON.stringify({ currentChat, message, currentUser }),
     });
 
     // Handle the response
     if (response.ok) {
-      const isBully = await response.json();
-      if (isBully) {
-        alert('This message is considered bullying');
-      }
       console.log('Message sent');
     } else {
       console.error('Failed to send message');

@@ -52,7 +52,11 @@ export default function ChannelsPage() {
       setCurrentChat(chatInstance);
     };
 
-    fetchChatInstance();
+    const intervalId = setInterval(fetchChatInstance, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [selectedChatId]);
 
   const handleChatSelect = (chatData: ChatInstance) => {

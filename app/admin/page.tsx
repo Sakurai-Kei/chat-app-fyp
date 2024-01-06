@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Card, Text, Button } from '@mantine/core';
+import { Accordion, Card, Text, Button, Divider } from '@mantine/core';
 
 function Navbar({ users, onSelectUser }) {
   return (
@@ -61,44 +61,49 @@ function Content({ user }) {
       {user ? (
         <>
           <Card shadow="xs" padding="md">
-            <Text size="lg" weight={500}>
+            <Text size="lg">
               Selected User:
             </Text>
             <p>{user.name}</p>
           </Card>
+            <Divider />
           <Card shadow="xs" padding="md">
-            <Text size="lg" weight={500}>
+            <Text size="lg">
               Bullied Users:
             </Text>
             {bulliedUsers.map((bulliedUser) => (
               <p key={bulliedUser.id}>{bulliedUser.name}</p>
             ))}
           </Card>
+          <Divider />
           <Card shadow="xs" padding="md">
-            <Text size="lg" weight={500}>
+            <Text size="lg">
               Risk Level:
             </Text>
             <p>{user.risk_level}</p>
           </Card>
+            <Divider />
           <Card shadow="xs" padding="md">
-            <Text size="lg" weight={500}>
-              Bully Message:
+            <Text size="lg">
+              Bully Messages:
             </Text>
-            <Card shadow="xs" padding="md">
-              <Text size="lg" weight={500}>
-                Bully Messages:
-              </Text>
-              {bullyMessage && bullyMessage.map((message, index) => (
-                <div key={index}>
-                  <p>Content: {message.content}</p>
-                  <p>Created At: {message.createdAt}</p>
-                  <p>User ID: {message.userId}</p>
-                  <p>Chat Instance ID: {message.chatInstanceId}</p>
-                  <p>Is Scanned: {message.isScanned ? 'Yes' : 'No'}</p>
-                  <p>Is Bully: {message.isBully ? 'Yes' : 'No'}</p>
-                </div>
-              ))}
-            </Card>
+            {bullyMessage && (
+              <Accordion>
+                {bullyMessage.map((message, index) => (
+                  <Accordion.Item key={index} value={`Message ${index + 1}`}>
+                    <Accordion.Control>{`Message ${index + 1}`}</Accordion.Control>
+                    <Accordion.Panel>
+                      <p>Content: {message.content}</p>
+                      <p>Created At: {message.createdAt}</p>
+                      <p>User ID: {message.userId}</p>
+                      <p>Chat Instance ID: {message.chatInstanceId}</p>
+                      <p>Is Scanned: {message.isScanned ? 'Yes' : 'No'}</p>
+                      <p>Is Bully: {message.isBully ? 'Yes' : 'No'}</p>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                ))}
+              </Accordion>
+            )}
           </Card>
         </>
       ) : null}

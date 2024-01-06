@@ -13,7 +13,12 @@ import { ChatInstance } from '@/app/channels/page';
 const mockdata = [{ label: 'Chat Instance with User 2', icon: IconGauge }];
 
 export function NavbarNested({ onChatSelect }) {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user') || '{}'));
+  const [user, setUser] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return JSON.parse(localStorage.getItem('user') || '{}');
+    }
+    return {};
+  });
   const [chatInstances, setChatInstances] = useState<[] | ChatInstance[]>([]);
 
   useEffect(() => {
